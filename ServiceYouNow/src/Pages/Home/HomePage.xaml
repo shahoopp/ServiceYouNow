@@ -1,0 +1,22 @@
+<Page x:Class="ServiceYouNow.src.pages.home.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="clr-namespace:ServiceYouNow.src.pages.home"
+      mc:Ignorable="d"
+      Background="White">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Button x:Name="Run" Height="100" Width="250" FontSize="40" Content="Run" Margin="0,0,0,10"
+                    Click="Run_Click" />
+            <Button x:Name="Login" Height="100" Width="250" FontSize="40" Content="Login" Margin="0,0,0,10" 
+                    Click="Login_Click" />
+			<Button x:Name="Catalog" Height="100" Width="250" FontSize="40" Content="Catalog" Margin ="0,0,0,10" 
+                    Click="Catalog_Click" />
+            <Button x:Name="MyTemplates" Height="100" Width="250" FontSize="40" Content="My Templates" Margin="0,0,0,10" 
+                    Click="MyTemplates_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
