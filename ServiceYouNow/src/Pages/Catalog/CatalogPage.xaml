@@ -27,24 +27,24 @@
             HorizontalAlignment="Center" 
             VerticalAlignment="Center" 
             Margin="10" 
-            Width="1200"
+            Width="600"
             >
             <Button
                 Content="PSG Database Access Request"
-                FontSize="60"
+                FontSize="30"
                 Background="#585958"
                 Foreground="White"
                 Margin="10"
-                Height="250"
+                Height="150"
                 Click="PSGDatabaseAccessRequest_Click" />
 
             <Button
                 Content="Microsoft SQL Database Access (ISG)"
-                FontSize="60"
+                FontSize="30"
                 Background="#585958"
                 Foreground="White"
                 Margin="10"
-                Height="250"
+                Height="150"
                 Click="MicrosoftSQLDatabaseAccessISG_Click" />
 
         </StackPanel>

@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServiceYouNow"
         mc:Ignorable="d"
-        Title="MainWindow"
-        Width="1200"
-		Height="1000"
+        Title="ServiceYouNow"
+        Width="1000"
+		Height="600"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow">
     <Grid>

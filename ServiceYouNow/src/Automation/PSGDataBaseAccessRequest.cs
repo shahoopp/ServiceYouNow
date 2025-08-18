@@ -76,7 +76,10 @@ namespace ServiceYouNow.src.automation
 
             await Locators.BusinessCase(_page).ClickAsync();
             await Locators.BusinessCase(_page).FillAsync(_businessCase);
+           
             await Locators.HomeButton(_page).ClickAsync();
+
+            await Locators.LeaveButton(_page).ClickAsync();
         }
     }
 }

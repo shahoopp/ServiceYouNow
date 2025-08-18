@@ -76,6 +76,9 @@ public static class Locators
     public static ILocator OrderNow(IPage page) =>
         page.GetByRole(AriaRole.Button, new() { Name = "Order Now" });
 
+    public static ILocator LeaveButton(IPage page) =>
+        page.GetByRole(AriaRole.Button, new() { Name = "Leave" });
+
     public static ILocator HomeButton(IPage page) =>
         page.GetByRole(AriaRole.Link, new() { Name = "Home", Exact = true });
 
