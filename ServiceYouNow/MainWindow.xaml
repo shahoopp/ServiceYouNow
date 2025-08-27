@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ServiceYouNow"
         Width="1000"
-		Height="600"
+		Height="700"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow">
     <Grid>

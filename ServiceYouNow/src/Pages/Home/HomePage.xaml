@@ -9,14 +9,14 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-            <Button x:Name="Run" Height="100" Width="250" FontSize="40" Content="Run" Margin="0,0,0,10"
-                    Click="Run_Click" />
-            <Button x:Name="Login" Height="100" Width="250" FontSize="40" Content="Login" Margin="0,0,0,10" 
+			<Button x:Name="LoginInfo" Height="100" Width="250" FontSize="35" Content="Login" Margin="0,0,0,10"
                     Click="Login_Click" />
-			<Button x:Name="Catalog" Height="100" Width="250" FontSize="40" Content="Catalog" Margin ="0,0,0,10" 
-                    Click="Catalog_Click" />
-            <Button x:Name="MyTemplates" Height="100" Width="250" FontSize="40" Content="My Templates" Margin="0,0,0,10" 
-                    Click="MyTemplates_Click" />
+			<Button x:Name="TriageDetails" Height="100" Width="250" FontSize="35" Content="Triage Details" Margin="0,0,0,10"
+                    Click="TriageDetails_Click" />
+			<Button x:Name="DateSelection" Height="100" Width="250" FontSize="35" Content="Date Selection" Margin="0,0,0,10"
+                    Click="DateSelection_Click" />
+            <Button x:Name="Run" Height="100" Width="250" FontSize="35" Content="Run" Margin="0,0,0,10"
+                    Click="Run_Click" />
         </StackPanel>
     </Grid>
 </Page>

@@ -1,9 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using ServiceYouNow.src.pages.login;
-using ServiceYouNow.src.pages.catalog;
-using ServiceYouNow.src.pages.mytemplates;
+using ServiceYouNow.src.pages.triagedetails;
+using ServiceYouNow.src.pages.dateselection;
 using ServiceYouNow.src.automation;
+using ServiceYouNow.Helpers;
+
 
 namespace ServiceYouNow.src.pages.home
 {
@@ -14,12 +16,6 @@ namespace ServiceYouNow.src.pages.home
             InitializeComponent();
         }
 
-        private async void Run_Click(object sender, RoutedEventArgs e)
-        {
-            var test = new Automation();
-            await test.LaunchBrowserAsync();
-        }
-
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow)
@@ -28,20 +24,27 @@ namespace ServiceYouNow.src.pages.home
             }
         }
 
-        private void Catalog_Click(object sender, RoutedEventArgs e)
+        private void TriageDetails_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.MainFrame.Navigate(new CatalogPage());
+                mainWindow.MainFrame.Navigate(new TriageDetails());
             }
         }
 
-        private void MyTemplates_Click(object sender, RoutedEventArgs e)
+        private void DateSelection_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.MainFrame.Navigate(new MyTemplatesPage());
+                mainWindow.MainFrame.Navigate(new DateSelectionPage());
             }
         }
+
+        private async void Run_Click(object sender, RoutedEventArgs e)
+        {
+            var test = new Automation();
+            await test.LaunchBrowserAsync();
+        }
+
     }
 }

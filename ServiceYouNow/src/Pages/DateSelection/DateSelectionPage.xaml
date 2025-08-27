@@ -1,0 +1,51 @@
+﻿<Page x:Class="ServiceYouNow.src.pages.dateselection.DateSelectionPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="clr-namespace:ServiceYouNow.src.pages.dateselection"
+      mc:Ignorable="d"
+      Background="White">
+	<Grid>
+		<!-- Back Button -->
+		<Button Content="←" FontSize="20" Background="#585958" Foreground="White"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"
+                Width="50" Height="30" Click="BackButton_Click" />
+
+		<!-- Main StackPanel for Sprint Days -->
+		<StackPanel x:Name="MyStackPanel"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0,75,0,0"
+                    Width="900">
+		</StackPanel>
+
+
+		<StackPanel Orientation="Horizontal"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Bottom"
+					Margin="0,0,0,20">
+			<Button Content="View Saved Dates"
+					FontSize="20"
+					Background="#007ACC"
+					Foreground="White"
+					Width="200"
+					Height="40"
+					Click="ViewSavedDates_Click"
+					Margin="10,0"/>
+
+			<Button Content="Save Selections"
+					FontSize="20"
+					Background="#007ACC"
+					Foreground="White"
+					Width="200"
+					Height="40"
+					Click="SaveButton_Click"
+					Margin="10,0"/>
+		</StackPanel>
+
+
+
+
+	</Grid>
+</Page>
