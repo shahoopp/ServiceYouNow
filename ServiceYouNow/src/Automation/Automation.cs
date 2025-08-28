@@ -298,7 +298,8 @@ namespace ServiceYouNow.src.automation
                 // Proceed to the next date; do NOT close 'page' — we leave the tab open.
             }
 
-            MessageBox.Show("All dates processed. Tabs remain open for review.",
+            MessageBox.Show("All dates processed. Tabs remain open for review." +
+                "\nDO NOT CLOSE THIS MESSAGE OR CLICK OK UNTIL REVIEW IS COMPLETE.",
                 "Automation Complete", MessageBoxButton.OK, MessageBoxImage.Information);
 
             // Helper: local wait method that polls the boolean flag
