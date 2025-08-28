@@ -25,9 +25,6 @@ namespace ServiceYouNow.src.pages.dateselection
             ((MainWindow)Application.Current.MainWindow).MainFrame.Navigate(new HomePage());
         }
 
-
-
-
         private void PopulateSprintUI(SprintInfo sprintInfo)
         {
             // Load saved preferences

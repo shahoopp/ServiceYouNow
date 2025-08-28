@@ -18,6 +18,11 @@ namespace ServiceYouNow.src.automation
         /// Uses the parsed date everywhere you previously used DateTime.Now,
         /// including file names, date pickers, and date fields.
         /// </summary>
+        /// 
+        public bool IsRunComplete { get; private set; }
+
+        public volatile bool ProceedToNext;
+
         public async Task RunAutomationAsync(IPage page, string date)
         {
             if (string.IsNullOrWhiteSpace(date))
@@ -40,9 +45,15 @@ namespace ServiceYouNow.src.automation
             // If you do need to assert logged-in status, you can add a quick check here.
 
             // Navigate to Incidents (existing logic)
+
             await Locators.SupportViewButton(page).ClickAsync();
             await Task.Delay(5000);
 
+            if (await Locators.StandardChangeButton(page).IsVisibleAsync())
+            {
+                await Locators.ChangeButton(page).ClickAsync();
+            }
+            await Task.Delay(2000);
             if (await Locators.AllIncidentsButton(page).IsVisibleAsync())
             {
                 await Locators.AllIncidentsButton(page).ClickAsync();
@@ -54,8 +65,7 @@ namespace ServiceYouNow.src.automation
                 await Locators.AllIncidentsButton(page).ClickAsync();
                 await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             }
-            await Task.Delay(1000);
-
+            await Task.Delay(2000);
             // Saved filter
             await SavedFilterLocators.ActionsButton(page).ClickAsync();
             await SavedFilterLocators.FiltersButton(page).ClickAsync();
@@ -81,7 +91,7 @@ namespace ServiceYouNow.src.automation
             var download = await downloadTask;
 
             // Save using the runDate-based stamp
-            string fileName = $"incidents_{fileStamp}.xlsx";
+            string fileName = $"Incidents_{fileStamp}.xlsx";
             var filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, $@"..\..\..\{fileName}"));
             await download.SaveAsAsync(filePath);
 
@@ -107,7 +117,7 @@ namespace ServiceYouNow.src.automation
                     await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
                 }
             }
-            await Task.Delay(1000);
+            await Task.Delay(2000);
 
             await Locators.PSGPension(page).ClickAsync();
             await Locators.NextPageButton(page).ClickAsync();
@@ -118,7 +128,7 @@ namespace ServiceYouNow.src.automation
             var fileInput = page
                 .FrameLocator("iframe[name='gsft_main']")
                 .Locator("input[type='file']");
-
+            await Task.Delay(2000);
             await fileInput.WaitForAsync(new() { State = WaitForSelectorState.Attached });
             await fileInput.SetInputFilesAsync(filePath);
 
@@ -130,18 +140,18 @@ namespace ServiceYouNow.src.automation
             await Locators.IncidentState(page).SelectOptionAsync(new[] { "5" }); // Completed
             await Locators.IncidentState(page).ClickAsync(); // collapse dropdown
 
-            // The following assumes these values are already placed by LaunchBrowserAsync in fields (workItemNumber, fullName, etc.)
-            // If you prefer, pass them into this method, or query prefs again.
-
             var prefs = PreferencesStorage.Load();
             string workItemNumber = prefs.WorkItemNumber;
             string fullName = prefs.FullName;
-
+            string notes = prefs.Notes;
             await Locators.DeploymentAssignedTo(page).ClickAsync();
             await Locators.DeploymentAssignedToClicked(page).FillAsync(fullName);
+            await Locators.DeploymentAssignedToClicked(page).PressAsync("Enter");
 
             await Locators.DevelopedBy(page).ClickAsync();
+
             await Locators.DevelopedBy(page).SelectOptionAsync(new[] { "hoopp internal" });
+
 
             await Locators.DevelopmentArtifactLocation(page).ClickAsync();
             await Locators.DevelopmentArtifactLocation(page).FillAsync(workItemNumber);
@@ -169,14 +179,20 @@ namespace ServiceYouNow.src.automation
             await Locators.ActualEndDate(page).ClickAsync();
             await Locators.ActualEndDate(page).FillAsync($"{snShort} 05:00 {afternoon}");
 
-            // Optional for debugging only. Remove for parallel runs:
-            await page.PauseAsync();
+            await Locators.NotesTab(page).ClickAsync();
+            await Locators.CommentsField(page).ClickAsync();
+            await Locators.CommentsField(page).FillAsync(notes);
+
+            IsRunComplete = true;
+            ProceedToNext = true;
         }
 
         /// <summary>
         /// Launches the browser, validates required prefs, logs in once,
         /// then opens one tab per selected date and runs them all concurrently.
         /// </summary>
+
+
         public async Task LaunchBrowserAsync()
         {
             var prefs = PreferencesStorage.Load();
@@ -187,7 +203,7 @@ namespace ServiceYouNow.src.automation
             string fullName = prefs.FullName;
             var selectedDates = prefs.SelectedSprintDates; // List<DateTime>
 
-            // --- Validation upfront ---
+            // ----- Validation (unchanged) -----
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Please set your login details in the Login page before running the automation.",
@@ -219,64 +235,87 @@ namespace ServiceYouNow.src.automation
                 return;
             }
 
-            // Prepare date strings in the exact format RunAutomationAsync expects ("dd-MMM-yy")
             var dateStrings = selectedDates
                 .Select(d => d.ToString("dd-MMM-yy", CultureInfo.InvariantCulture))
                 .ToList();
 
-            // --- Browser/context setup ---
-            var playwright = await Playwright.CreateAsync();
-            var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions
+            // ----- One browser, one context, many tabs (sequential) -----
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                AcceptDownloads = true
+                Headless = false
             });
 
-            // --- Login once on a bootstrap page so the session is shared across all new tabs ---
-            var bootstrapPage = await context.NewPageAsync();
-
-            await bootstrapPage.GotoAsync("https://hoopp.service-now.com/sp?id=index");
-
-            // Login flow
-            await SignInPageLocators.EmailField(bootstrapPage).ClickAsync();
-            await SignInPageLocators.EmailField(bootstrapPage).FillAsync(username);
-            await SignInPageLocators.NextButton(bootstrapPage).ClickAsync();
-            await SignInPageLocators.PasswordField(bootstrapPage).ClickAsync();
-            await SignInPageLocators.PasswordField(bootstrapPage).FillAsync(password);
-            await SignInPageLocators.SignInButton(bootstrapPage).ClickAsync();
-
-            // TODO: Ideally, add a small wait/verification that login succeeded.
-            // e.g., wait for a known element that exists only after login.
-
-            // --- Spawn one page per date and run concurrently ---
-            var tasks = dateStrings.Select(async ds =>
+            // Single window/context so all tabs appear in the same window
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions
             {
+                AcceptDownloads = true,
+                ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },
+                ScreenSize = new ScreenSize { Width = 1920, Height = 1080 }
+            });
+
+            // ---- Login once in the SAME context (keep this tab open) ----
+            var loginPage = await context.NewPageAsync();
+            await loginPage.GotoAsync("https://hoopp.service-now.com/sp?id=index");
+
+            await SignInPageLocators.EmailField(loginPage).ClickAsync();
+            await SignInPageLocators.EmailField(loginPage).FillAsync(username);
+            await SignInPageLocators.NextButton(loginPage).ClickAsync();
+            await SignInPageLocators.PasswordField(loginPage).ClickAsync();
+            await SignInPageLocators.PasswordField(loginPage).FillAsync(password);
+            await SignInPageLocators.SignInButton(loginPage).ClickAsync();
+
+            await loginPage.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            // Do not close this page; it remains as the first tab.
+
+            // ---- Create one NEW TAB per date, sequentially; never close tabs ----
+            foreach (var ds in dateStrings)
+            {
+                // New TAB (page) in the SAME context/window
                 var page = await context.NewPageAsync();
+                await page.BringToFrontAsync(); // surface the active tab
 
-                try
-                {
-                    await RunAutomationAsync(page, ds);
-                }
-                catch (Exception ex)
-                {
-                    // Log or show a per-tab error if desired
-                    Console.Error.WriteLine($"Automation failed for {ds}: {ex}");
-                    // Optionally show a MessageBox once (UI thread permitting)
-                    // Application.Current?.Dispatcher?.Invoke(() =>
-                    //     MessageBox.Show($"Automation failed for {ds}: {ex.Message}", "Run Error", MessageBoxButton.OK, MessageBoxImage.Error)
-                    // );
-                }
-                finally
-                {
-                    // Close the tab to free resources
-                    await page.CloseAsync();
-                }
-            }).ToList();
+                // Reset the flag before starting this run
+                ProceedToNext = false;
 
-            await Task.WhenAll(tasks);
+                // Kick off the run; DO NOT await if you plan to set the flag before a Pause
+                // If your RunAutomationAsync completes fully and does not Pause, you can 'await' instead.
+                var runTask = RunAutomationAsync(page, ds);
 
-            // All done
-            await browser.CloseAsync();
+                // Log unhandled exceptions from the run without blocking the loop
+                _ = runTask.ContinueWith(t =>
+                {
+                    if (t.IsFaulted && t.Exception != null)
+                    {
+                        Console.Error.WriteLine($"Automation failed for {ds}: {t.Exception.Flatten()}");
+                    }
+                }, TaskScheduler.Default);
+
+                // Wait until RunAutomationAsync signals it's safe to proceed to the next tab.
+                // If you keep 'await page.PauseAsync()' inside RunAutomationAsync, set the flag BEFORE the Pause.
+                await WaitUntilAsync(() => ProceedToNext, timeout: TimeSpan.FromMinutes(15), pollMs: 200);
+
+                // Proceed to the next date; do NOT close 'page' — we leave the tab open.
+            }
+
+            MessageBox.Show("All dates processed. Tabs remain open for review.",
+                "Automation Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            // Helper: local wait method that polls the boolean flag
+            static async Task WaitUntilAsync(Func<bool> predicate, TimeSpan timeout, int pollMs)
+            {
+                var start = DateTime.UtcNow;
+                while (!predicate())
+                {
+                    if (DateTime.UtcNow - start > timeout)
+                        throw new TimeoutException($"Timed out waiting for condition after {timeout}.");
+                    await Task.Delay(pollMs);
+                }
+            }
+
+            // Note: Intentionally NOT closing the browser/context/pages so you can inspect all tabs.
         }
+
+
     }
 }

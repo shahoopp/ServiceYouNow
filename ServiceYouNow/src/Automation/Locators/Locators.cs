@@ -25,6 +25,12 @@ public static class Locators
     public static ILocator StandardChangeCatalogButton(IPage page) =>
         page.GetByRole(AriaRole.Link, new() { Name = "Standard Change Catalog" });
 
+    public static ILocator LegalRequestsSubButton(IPage page) =>
+        page.GetByRole(AriaRole.Button, new() { Name = " Legal Requests" });
+
+    public static ILocator LegalRequestsButton(IPage page) =>
+        page.GetByRole(AriaRole.Button, new() { Name = "Legal Request", Exact = true });
+
     public static ILocator PSGPension(IPage page) =>
         page.FrameLocator("iframe[name=\"gsft_main\"]")
             .GetByRole(AriaRole.Link, new() { Name = "PSG-Pension" });
@@ -168,6 +174,14 @@ public static class Locators
     public static ILocator RunFilterButton(IPage page) =>
     page.FrameLocator("iframe[name=\"gsft_main\"]")
         .GetByRole(AriaRole.Button, new() { Name = "Run filter" });
+
+    public static ILocator NotesTab(IPage page) =>
+        page.FrameLocator("iframe[name=\"gsft_main\"]")
+            .GetByRole(AriaRole.Tab, new() { Name = "Notes" });
+
+    public static ILocator CommentsField(IPage page) =>
+        page.FrameLocator("iframe[name=\"gsft_main\"]")
+            .GetByRole(AriaRole.Textbox, new() { Name = "Comments (Customer visible)" });
 
 
 
