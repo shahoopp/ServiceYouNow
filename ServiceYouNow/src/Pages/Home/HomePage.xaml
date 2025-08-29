@@ -4,19 +4,28 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:local="clr-namespace:ServiceYouNow.src.pages.home"
-      mc:Ignorable="d"
-      Background="White">
+      mc:Ignorable="d">
 
-    <Grid>
+    <Grid Background="White">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-			<Button x:Name="LoginInfo" Height="100" Width="250" FontSize="35" Content="Login" Margin="0,0,0,10"
-                    Click="Login_Click" />
-			<Button x:Name="TriageDetails" Height="100" Width="250" FontSize="35" Content="Triage Details" Margin="0,0,0,10"
-                    Click="TriageDetails_Click" />
-			<Button x:Name="DateSelection" Height="100" Width="250" FontSize="35" Content="Date Selection" Margin="0,0,0,10"
-                    Click="DateSelection_Click" />
+            <TextBlock Text="Service You Now"
+                       FontSize="48"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,30"
+                       Foreground="#FF2596BE"/>
+            <Button x:Name="LoginInfo" Height="100" Width="250" FontSize="35" Content="Login" Margin="0,0,0,10"
+                    Click="Login_Click"
+                    Background="#FF2596BE" Foreground="White" BorderBrush="#FF2596BE" BorderThickness="2"/>
+            <Button x:Name="TriageDetails" Height="100" Width="250" FontSize="35" Content="Triage Details" Margin="0,0,0,10"
+                    Click="TriageDetails_Click"
+                    Background="#FF2596BE" Foreground="White" BorderBrush="#FF2596BE" BorderThickness="2"/>
+            <Button x:Name="DateSelection" Height="100" Width="250" FontSize="35" Content="Date Selection" Margin="0,0,0,10"
+                    Click="DateSelection_Click"
+                    Background="#FF2596BE" Foreground="White" BorderBrush="#FF2596BE" BorderThickness="2"/>
             <Button x:Name="Run" Height="100" Width="250" FontSize="35" Content="Run" Margin="0,0,0,10"
-                    Click="Run_Click" />
+                    Click="Run_Click"
+                    Background="#FF2596BE" Foreground="White" BorderBrush="#FF2596BE" BorderThickness="2"/>
         </StackPanel>
     </Grid>
 </Page>

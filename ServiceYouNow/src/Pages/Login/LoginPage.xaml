@@ -9,16 +9,18 @@
     <Grid>
         <!--
         -->
-        <Button 
-            Content="←" 
+		<Button
+            Content="←"
             FontSize="20"
-            Background="#585958"
+            Background="#FF2596BE"
             Foreground="White"
-            HorizontalAlignment="Left" 
-            VerticalAlignment="Top" 
-            Margin="20" 
-            Width="50" 
-            Height="30" 
+            BorderBrush="#FF2596BE"
+            BorderThickness="2"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="20"
+            Width="50"
+            Height="30"
             Click="BackButton_Click" />
 
 

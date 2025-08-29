@@ -11,8 +11,10 @@
 		<Button
             Content="←"
             FontSize="20"
-            Background="#585958"
+            Background="#FF2596BE"
             Foreground="White"
+            BorderBrush="#FF2596BE"
+            BorderThickness="2"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Margin="20"
