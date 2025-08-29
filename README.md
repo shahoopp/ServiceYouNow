@@ -11,6 +11,8 @@ This project automates ServiceNow workflows using the Microsoft.Playwright libra
 - Uploads exported files to relevant ServiceNow sections.
 - Fills out forms and schedules using date-specific information.
 - Supports concurrent automation across multiple tabs.
+- Keeps tabs open after execution for manual inspection.
+- Designed to be non-blocking and resilient to UI delays.
 
 ---
 
@@ -51,7 +53,7 @@ Call the `LaunchBrowserAsync()` method. It will:
 3. Open one tab per selected date
 4. Run automation for each tab sequentially
 
-#### Automation Flow
+### Automation Flow
 
 - Navigate to the ServiceNow homepage
 - Apply saved filters and select the appropriate date
@@ -75,3 +77,5 @@ Exported files are saved as:
 - You need to have a filter saved on the Incidents page labelled as `AUTOMATION_FILTER`.
 - Tabs remain open after execution for manual inspection.
 - The automation is designed to be non-blocking and resilient to UI delays.
+- Average run time per tab: 30 seconds (10 tabs: 5 minutes 30 seconds)
+- IMPORTANT: Let the automation complete before interacting with the browser.
