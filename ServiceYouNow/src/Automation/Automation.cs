@@ -90,10 +90,23 @@ namespace ServiceYouNow.src.automation
             await ExportLocators.DownloadButton(page).ClickAsync();
             var download = await downloadTask;
 
-            // Save using the runDate-based stamp
+
+            var prefs = PreferencesStorage.Load();
+            string username = prefs.Username.Split('@')[0]; // Extracts 'slone' from 'slone@hoopp.com'
             string fileName = $"Incidents_{fileStamp}.xlsx";
-            var filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, $@"..\..\..\{fileName}"));
+
+            // Build the path: C:\Users\<username>\Downloads\CAB
+            string userDownloadsPath = Path.Combine(@"C:\Users", username, "Downloads", "CAB");
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(userDownloadsPath);
+
+            // Final file path
+            var filePath = Path.Combine(userDownloadsPath, fileName);
+
+            // Save the file
             await download.SaveAsAsync(filePath);
+
 
             // Standard Change navigation (existing branching preserved)
             if (await Locators.StandardChangeCatalogButton(page).IsVisibleAsync())
@@ -140,7 +153,6 @@ namespace ServiceYouNow.src.automation
             await Locators.IncidentState(page).SelectOptionAsync(new[] { "5" }); // Completed
             await Locators.IncidentState(page).ClickAsync(); // collapse dropdown
 
-            var prefs = PreferencesStorage.Load();
             string workItemNumber = prefs.WorkItemNumber;
             string fullName = prefs.FullName;
             string notes = prefs.Notes;
